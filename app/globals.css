@@ -83,6 +83,34 @@ html {
     @apply gradient font-extrabold tracking-tighter pr-2 pb-2 text-transparent bg-clip-text;
   }
 }
+/* Keyframes for the shake animation */
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Add the shake animation and gradient */
+.shake {
+  animation: shake 0.5s infinite linear; /* Infinite looping and linear timing */
+  display: inline-block; /* Ensures the text shakes */
+  background: linear-gradient(90deg, #e405c6, #310cd6);
+  -webkit-background-clip: text; /* Clips gradient to text */
+  -webkit-text-fill-color: transparent; /* Makes the background gradient visible */
+  font-weight: bold; /* Optional: Enhance visibility */
+}
 
 .hero-image-wrapper {
   perspective: 1000px;
