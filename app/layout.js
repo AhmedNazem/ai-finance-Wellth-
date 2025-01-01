@@ -3,9 +3,9 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { ClerkProvider } from "@clerk/nextjs";
 export const metadata = {
-  title: "Wellth",
+  title: "Weallth",
   description:
-    "Wellth is a Finance Platform for easy and fast interaction with your finances.",
+    "Weallth is a Finance Platform for easy and fast interaction with your finances.",
 };
 const inter = Inter({ subsets: ["latin"] });
 export default function RootLayout({ children }) {

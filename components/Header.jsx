@@ -13,7 +13,7 @@ function Header() {
             src="/logo-sm.png"
             height={60}
             width={200}
-            alt="wellth logo"
+            alt="weallth logo"
             className="h-12 w-auto object-contain "
           />
         </Link>
