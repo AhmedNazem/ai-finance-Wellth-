@@ -1,3 +1,5 @@
+"use client";
+import { updateDefaultAccount } from "@/actions/accounts";
 import {
   Card,
   CardContent,
@@ -7,11 +9,38 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import useFetch from "@/hooks/useFetch";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 function AccountCard({ account }) {
   const { name, type, balance, id, isDefault } = account;
+  const {
+    loading: updateDefaultLoading,
+    fn: updateDefaultFn,
+    data: updatedAccount,
+    error,
+  } = useFetch(updateDefaultAccount);
+  const handleDefaultChange = async (e) => {
+    e.preventDefault();
+    if (isDefault) {
+      toast.warning("You need at least one default account");
+      return;
+    }
+    await updateDefaultFn(id);
+  };
+  useEffect(() => {
+    if (updatedAccount?.success) {
+      toast.success("Default account updated successfully");
+    }
+  }, [updatedAccount, updateDefaultLoading]);
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message || "Failed to update default account");
+    }
+  }, [updatedAccount, updateDefaultLoading]);
   return (
     <Card className="hover:shadow-md transition-shadow group relative">
       <Link href={`/account/${id}`}>
@@ -19,7 +48,11 @@ function AccountCard({ account }) {
           <CardTitle className="text-sm font-medium capitalize">
             {name}
           </CardTitle>
-          <Switch checked={isDefault} />
+          <Switch
+            checked={isDefault}
+            onClick={handleDefaultChange}
+            disabled={updateDefaultLoading}
+          />
         </CardHeader>
 
         <CardContent>
