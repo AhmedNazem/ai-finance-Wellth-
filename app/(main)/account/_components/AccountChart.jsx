@@ -1,9 +1,24 @@
 "use client";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { endOfDay, format, startOfDay, subDays } from "date-fns";
-import { BarChart } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
   Bar,
+  BarChart,
   CartesianGrid,
   Legend,
   Rectangle,
@@ -58,37 +73,93 @@ function AccountChart({ transactions }) {
   }, [filteredData]);
   console.log(totals);
   return (
-    <div>
-      {/* <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          width={500}
-          height={300}
-          data={data}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar
-            dataKey="pv"
-            fill="#8884d8"
-            activeBar={<Rectangle fill="pink" stroke="blue" />}
-          />
-          <Bar
-            dataKey="uv"
-            fill="#82ca9d"
-            activeBar={<Rectangle fill="gold" stroke="purple" />}
-          />
-        </BarChart>
-      </ResponsiveContainer> */}
-    </div>
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-7">
+        <CardTitle className="text-base font-normal">
+          Transaction Overview
+        </CardTitle>
+        {/* //? select 👇🏼 */}
+        <Select defaultValue={dateRange} onValueChange={setDateRange}>
+          <SelectTrigger className="w-[140px]">
+            <SelectValue placeholder="Select range" />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.entries(DATE_RANGES).map(([key, { label }]) => {
+              return (
+                <SelectItem key={key} value={key}>
+                  {label}
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
+        {/* //? select 👆🏼 */}
+      </CardHeader>
+      <CardContent>
+        <div className="flex justify-around mb-6 text-sm">
+          <div className="text-center">
+            <p className="text-muted-foreground">Total Income</p>
+            <p className="text-lg font-bold text-green-500">
+              ${totals.income.toFixed(2)}
+            </p>
+          </div>
+          <div className="text-center">
+            <p className="text-muted-foreground">Total Expenses</p>
+            <p className="text-lg font-bold text-red-500">
+              ${totals.expense.toFixed(2)}
+            </p>
+          </div>
+          <div className="text-center">
+            <p className="text-muted-foreground"> Net</p>
+            <p
+              className={`text-lg font-bold ${
+                totals.income - totals.expense >= 0
+                  ? "text-green-500"
+                  : "text-red-500"
+              }`}
+            >
+              ${(totals.income - totals.expense).toFixed(2)}
+            </p>
+          </div>
+        </div>
+        <div className="h-[300px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={filteredData}
+              margin={{
+                top: 10,
+                right: 10,
+                left: 10,
+                bottom: 0,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey="date" />
+              <YAxis
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={(value) => `$${value}`}
+              />
+              <Tooltip formatter={(value) => [`$${value}`, undefined]} />
+              <Legend />
+              <Bar
+                dataKey="income"
+                fill="#22c55e"
+                radius={[4, 4, 0, 0]}
+                // activeBar={<Rectangle fill="gr" stroke="blue" />}
+              />
+              <Bar
+                dataKey="expense"
+                fill="#ef4444"
+                radius={[4, 4, 0, 0]}
+                // activeBar={<Rectangle fill="gold" stroke="purple" />}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
